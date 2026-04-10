@@ -26,38 +26,67 @@ function calculateRSI(prices, period=14) {
   return 100 - (100 / (1 + rs));
 }
 
-async function analyze(symbol) {
-  const prices15 = await fetchKlines(symbol,"15m");
-  const prices4h = await fetchKlines(symbol,"4h");
+function getSupportResistance(prices) {
+  return {
+    support: Math.min(...prices.slice(-20)),
+    resistance: Math.max(...prices.slice(-20))
+  };
+}
 
-  const price = prices15[prices15.length - 1];
-  const ema50 = calculateEMA(prices4h,50);
-  const ema200 = calculateEMA(prices4h,200);
-  const rsi = calculateRSI(prices15);
+function calculateVolatility(prices) {
+  let changes = [];
+  for (let i = 1; i < prices.length; i++) {
+    let change = Math.abs((prices[i] - prices[i - 1]) / prices[i - 1]) * 100;
+    changes.push(change);
+  }
+  return changes.reduce((a, b) => a + b, 0) / changes.length;
+}
 
-  let trend = ema50 > ema200 ? "UP" : "DOWN";
+function getBestTimeframe(volatility) {
+  if (volatility < 0.5) return {trendTF:"1D", entryTF:"1H"};
+  if (volatility < 1.5) return {trendTF:"4H", entryTF:"15m"};
+  return {trendTF:"1H", entryTF:"5m"};
+}
 
-  if (trend==="UP" && rsi < 35) return {signal:"BUY"};
-  if (trend==="DOWN" && rsi > 65) return {signal:"SELL"};
-
-  return {signal:"WAIT"};
+function getSignal({trend, rsi, price, support, resistance}) {
+  if (rsi > 45 && rsi < 55) return { signal: "WAIT" };
+  if (trend==="UP" && rsi < 35 && price <= support*1.01) return { signal:"BUY" };
+  if (trend==="DOWN" && rsi > 65 && price >= resistance*0.99) return { signal:"SELL" };
+  return { signal:"WAIT" };
 }
 
 function calculateTrade(price, signal) {
   let entry = price, tp=null, sl=null;
-
-  if (signal==="BUY") {
-    tp = price*1.01;
-    sl = price*0.995;
-  }
-  if (signal==="SELL") {
-    tp = price*0.99;
-    sl = price*1.005;
-  }
-
+  if (signal==="BUY") { tp = price*1.01; sl = price*0.995; }
+  if (signal==="SELL") { tp = price*0.99; sl = price*1.005; }
   let rr = (tp && sl) ? (Math.abs(tp-entry)/Math.abs(entry-sl)).toFixed(2) : "-";
-
   return {entry,tp,sl,rr};
+}
+
+function explain(signal) {
+  if (signal==="BUY") return "Compra segura basada en tendencia + soporte + RSI bajo";
+  if (signal==="SELL") return "Venta segura basada en tendencia + resistencia + RSI alto";
+  return "No operar: mercado sin claridad";
+}
+
+async function analyze(symbol) {
+  const prices15 = await fetchKlines(symbol,"15m");
+  const prices4h = await fetchKlines(symbol,"4h");
+
+  const price = prices15[prices15.length-1];
+  const ema50 = calculateEMA(prices4h,50);
+  const ema200 = calculateEMA(prices4h,200);
+  const rsi = calculateRSI(prices15);
+
+  const trend = ema50 > ema200 ? "UP" : "DOWN";
+  const {support,resistance} = getSupportResistance(prices15);
+
+  const volatility = calculateVolatility(prices15);
+  const tf = getBestTimeframe(volatility);
+
+  const signalObj = getSignal({trend,rsi,price,support,resistance});
+
+  return {price, signal: signalObj.signal, trend, rsi, tf};
 }
 
 async function updateSignals() {
@@ -65,20 +94,22 @@ async function updateSignals() {
   table.innerHTML="";
 
   for (let pair of pairs) {
-    const prices = await fetchKlines(pair);
-    const price = prices[prices.length-1];
-    const analysis = await analyze(pair);
-    const trade = calculateTrade(price, analysis.signal);
+    const result = await analyze(pair);
+    const trade = calculateTrade(result.price, result.signal);
+    const exp = explain(result.signal);
 
     const row = `
     <tr>
       <td>${pair}</td>
-      <td>${price.toFixed(2)}</td>
-      <td class="${analysis.signal.toLowerCase()}">${analysis.signal}</td>
+      <td>${result.price.toFixed(2)}</td>
+      <td class="${result.signal.toLowerCase()}">${result.signal}</td>
+      <td>${result.tf.trendTF}</td>
+      <td>${result.tf.entryTF}</td>
       <td>${trade.entry?.toFixed(2)||"-"}</td>
       <td>${trade.tp?.toFixed(2)||"-"}</td>
       <td>${trade.sl?.toFixed(2)||"-"}</td>
       <td>${trade.rr}</td>
+      <td>${exp}</td>
     </tr>`;
 
     table.innerHTML += row;

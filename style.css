@@ -1,17 +1,17 @@
 body {
-  font-family: Arial;
-  background: #0f172a;
-  color: white;
-  text-align: center;
+font-family: Arial;
+background: #0f172a;
+color: white;
+text-align: center;
 }
 table {
-  width: 90%;
-  margin: auto;
-  border-collapse: collapse;
+width: 95%;
+margin: auto;
+border-collapse: collapse;
 }
 th, td {
-  padding: 10px;
-  border-bottom: 1px solid #334155;
+padding: 10px;
+border-bottom: 1px solid #334155;
 }
 .buy { color: #22c55e; }
 .sell { color: #ef4444; }

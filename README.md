@@ -1,6 +1,6 @@
-# Crypto Signals Pro V2
+# Crypto Signals Pro V4
 
-Versión mejorada con análisis real:
-- EMA 50 / 200
-- RSI
-- Señales más estables
+Modo inteligente:
+- Temporalidad automática
+- Análisis seguro
+- Estrategias conservadoras
