@@ -1,19 +1,760 @@
+/* ========================================
+   CRYPE - Estilos principales
+   Dashboard oscuro estilo trading
+   ======================================== */
+
+:root {
+    --bg-primary: #06060f;
+    --bg-secondary: #0d0d1f;
+    --bg-card: #111128;
+    --bg-card-hover: #161640;
+    --border-color: #1c1c45;
+    --border-accent: #2a2a5c;
+    --text-primary: #e8e8f4;
+    --text-secondary: #8888aa;
+    --text-muted: #555577;
+    --accent-purple: #7c4dff;
+    --accent-cyan: #00bcd4;
+    --accent-gradient: linear-gradient(135deg, #7c4dff, #00bcd4);
+    --green: #00e676;
+    --green-bg: rgba(0, 230, 118, 0.1);
+    --green-border: rgba(0, 230, 118, 0.25);
+    --red: #ff5252;
+    --red-bg: rgba(255, 82, 82, 0.1);
+    --red-border: rgba(255, 82, 82, 0.25);
+    --amber: #ffab40;
+    --amber-bg: rgba(255, 171, 64, 0.1);
+    --amber-border: rgba(255, 171, 64, 0.25);
+    --gold: #ffd740;
+    --silver: #b0bec5;
+    --bronze: #ff8a65;
+    --radius: 12px;
+    --radius-sm: 8px;
+    --shadow: 0 4px 24px rgba(0, 0, 0, 0.4);
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
 body {
-font-family: Arial;
-background: #0f172a;
-color: white;
-text-align: center;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    background: var(--bg-primary);
+    color: var(--text-primary);
+    min-height: 100vh;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
 }
-table {
-width: 95%;
-margin: auto;
-border-collapse: collapse;
+
+#app {
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: 0 16px;
 }
-th, td {
-padding: 10px;
-border-bottom: 1px solid #334155;
+
+/* Scrollbar */
+::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
 }
-.buy { color: #22c55e; }
-.sell { color: #ef4444; }
-.wait { color: #94a3b8; }
-#status { margin: 15px; }
+::-webkit-scrollbar-track {
+    background: var(--bg-secondary);
+}
+::-webkit-scrollbar-thumb {
+    background: var(--border-accent);
+    border-radius: 3px;
+}
+
+/* ==================== HEADER ==================== */
+.header {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: rgba(6, 6, 15, 0.85);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border-bottom: 1px solid var(--border-color);
+    margin: 0 -16px;
+    padding: 0 16px;
+}
+
+.header-inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 64px;
+    max-width: 1280px;
+    margin: 0 auto;
+}
+
+.logo {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.logo-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.logo-text {
+    font-size: 1.5rem;
+    font-weight: 900;
+    letter-spacing: 2px;
+    background: var(--accent-gradient);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.status-container {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 2px;
+}
+
+.status-indicator {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.8rem;
+    font-weight: 500;
+    color: var(--text-secondary);
+}
+
+.status-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--amber);
+    transition: background 0.3s;
+}
+
+.status-indicator.connected .status-dot {
+    background: var(--green);
+    box-shadow: 0 0 8px rgba(0, 230, 118, 0.5);
+    animation: pulse-dot 2s infinite;
+}
+
+.status-indicator.error .status-dot {
+    background: var(--red);
+}
+
+.status-indicator.loading .status-dot {
+    background: var(--amber);
+    animation: pulse-dot 1s infinite;
+}
+
+@keyframes pulse-dot {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.4; }
+}
+
+.last-update {
+    font-size: 0.7rem;
+    color: var(--text-muted);
+}
+
+/* ==================== VOLATILITY BANNER ==================== */
+.volatility-banner {
+    margin-top: 16px;
+    padding: 10px 20px;
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius);
+    text-align: center;
+    font-size: 0.85rem;
+    color: var(--text-secondary);
+}
+
+.volatility-inner {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+.volatility-icon {
+    font-size: 1.1rem;
+}
+
+.volatility-level {
+    font-weight: 700;
+    color: var(--accent-cyan);
+}
+
+.volatility-divider {
+    color: var(--text-muted);
+    margin: 0 4px;
+}
+
+.timeframe-display {
+    font-weight: 600;
+    color: var(--text-primary);
+}
+
+/* ==================== CARDS ==================== */
+.cards-section {
+    margin-top: 20px;
+}
+
+.cards-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 14px;
+}
+
+@media (max-width: 900px) {
+    .cards-grid { grid-template-columns: repeat(2, 1fr); }
+}
+@media (max-width: 500px) {
+    .cards-grid { grid-template-columns: 1fr; }
+}
+
+.crypto-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius);
+    padding: 20px;
+    transition: all 0.3s ease;
+    cursor: default;
+    position: relative;
+    overflow: hidden;
+}
+
+.crypto-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: var(--accent-gradient);
+    opacity: 0;
+    transition: opacity 0.3s;
+}
+
+.crypto-card:hover {
+    border-color: var(--border-accent);
+    transform: translateY(-2px);
+    box-shadow: var(--shadow);
+}
+
+.crypto-card:hover::before {
+    opacity: 1;
+}
+
+.crypto-card.signal-buy {
+    border-color: var(--green-border);
+}
+.crypto-card.signal-buy::before {
+    background: var(--green);
+    opacity: 1;
+}
+
+.crypto-card.signal-sell {
+    border-color: var(--red-border);
+}
+.crypto-card.signal-sell::before {
+    background: var(--red);
+    opacity: 1;
+}
+
+.crypto-card.signal-wait {
+    border-color: var(--amber-border);
+}
+
+.card-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 12px;
+}
+
+.card-coin {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.card-emoji {
+    font-size: 1.5rem;
+}
+
+.card-name {
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--text-primary);
+}
+
+.card-pair {
+    font-size: 0.7rem;
+    color: var(--text-muted);
+    font-weight: 400;
+}
+
+.card-change {
+    font-size: 0.8rem;
+    font-weight: 600;
+    padding: 3px 8px;
+    border-radius: 6px;
+}
+
+.card-change.positive {
+    color: var(--green);
+    background: var(--green-bg);
+}
+
+.card-change.negative {
+    color: var(--red);
+    background: var(--red-bg);
+}
+
+.card-price {
+    font-size: 1.6rem;
+    font-weight: 800;
+    color: var(--text-primary);
+    margin-bottom: 4px;
+    letter-spacing: -0.5px;
+}
+
+.card-price-label {
+    font-size: 0.7rem;
+    color: var(--text-muted);
+    margin-bottom: 14px;
+}
+
+.card-signal {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 14px;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.card-signal.buy {
+    background: var(--green-bg);
+    color: var(--green);
+    border: 1px solid var(--green-border);
+}
+
+.card-signal.sell {
+    background: var(--red-bg);
+    color: var(--red);
+    border: 1px solid var(--red-border);
+}
+
+.card-signal.wait {
+    background: var(--amber-bg);
+    color: var(--amber);
+    border: 1px solid var(--amber-border);
+}
+
+.card-confidence {
+    display: inline-block;
+    margin-left: 10px;
+    font-size: 0.7rem;
+    font-weight: 500;
+    padding: 3px 8px;
+    border-radius: 4px;
+    color: var(--text-muted);
+    background: rgba(255,255,255,0.04);
+}
+
+/* Placeholder */
+.card-placeholder {
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius);
+    padding: 40px 20px;
+    text-align: center;
+    color: var(--text-muted);
+    font-size: 0.85rem;
+}
+
+.placeholder-pulse {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: var(--border-color);
+    margin: 0 auto 12px;
+    animation: pulse-box 1.5s infinite;
+}
+
+@keyframes pulse-box {
+    0%, 100% { opacity: 0.4; }
+    50% { opacity: 1; }
+}
+
+/* ==================== RANKING ==================== */
+.ranking-section {
+    margin-top: 24px;
+}
+
+.section-title {
+    font-size: 1.1rem;
+    font-weight: 700;
+    margin-bottom: 14px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: var(--text-primary);
+}
+
+.section-icon {
+    font-size: 1.2rem;
+}
+
+.ranking-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 14px;
+}
+
+@media (max-width: 700px) {
+    .ranking-grid { grid-template-columns: 1fr; }
+}
+
+.ranking-card {
+    background: var(--bg-card);
+    border-radius: var(--radius);
+    padding: 18px;
+    border: 1px solid var(--border-color);
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    transition: all 0.3s;
+}
+
+.ranking-card:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow);
+}
+
+.ranking-medal {
+    font-size: 2rem;
+    flex-shrink: 0;
+    width: 44px;
+    height: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.ranking-info {
+    flex: 1;
+    min-width: 0;
+}
+
+.ranking-name {
+    font-weight: 700;
+    font-size: 0.95rem;
+    margin-bottom: 2px;
+}
+
+.ranking-reason {
+    font-size: 0.75rem;
+    color: var(--text-secondary);
+    line-height: 1.4;
+}
+
+.ranking-badge {
+    padding: 5px 12px;
+    border-radius: 16px;
+    font-size: 0.75rem;
+    font-weight: 700;
+    flex-shrink: 0;
+    text-transform: uppercase;
+}
+
+.ranking-badge.buy {
+    background: var(--green-bg);
+    color: var(--green);
+    border: 1px solid var(--green-border);
+}
+
+.ranking-badge.sell {
+    background: var(--red-bg);
+    color: var(--red);
+    border: 1px solid var(--red-border);
+}
+
+/* ==================== SIGNALS TABLE ==================== */
+.signals-section {
+    margin-top: 24px;
+}
+
+.table-wrapper {
+    overflow-x: auto;
+    border-radius: var(--radius);
+    border: 1px solid var(--border-color);
+    background: var(--bg-card);
+}
+
+.signals-table {
+    width: 100%;
+    border-collapse: collapse;
+    min-width: 900px;
+}
+
+.signals-table thead {
+    background: rgba(255, 255, 255, 0.03);
+}
+
+.signals-table th {
+    padding: 12px 14px;
+    text-align: left;
+    font-size: 0.72rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: var(--text-muted);
+    border-bottom: 1px solid var(--border-color);
+    white-space: nowrap;
+}
+
+.signals-table td {
+    padding: 14px;
+    font-size: 0.85rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.03);
+    vertical-align: middle;
+}
+
+.signals-table tbody tr {
+    transition: background 0.2s;
+}
+
+.signals-table tbody tr:hover {
+    background: rgba(255, 255, 255, 0.02);
+}
+
+.signals-table tbody tr:last-child td {
+    border-bottom: none;
+}
+
+.table-coin {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-weight: 600;
+}
+
+.table-emoji {
+    font-size: 1.2rem;
+}
+
+.table-price {
+    font-weight: 700;
+    font-family: 'Inter', monospace;
+    color: var(--text-primary);
+}
+
+.table-signal {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    padding: 4px 12px;
+    border-radius: 16px;
+    font-size: 0.78rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+}
+
+.table-signal.buy {
+    background: var(--green-bg);
+    color: var(--green);
+}
+
+.table-signal.sell {
+    background: var(--red-bg);
+    color: var(--red);
+}
+
+.table-signal.wait {
+    background: var(--amber-bg);
+    color: var(--amber);
+}
+
+.table-confidence {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 3px 10px;
+    border-radius: 6px;
+    font-size: 0.75rem;
+    font-weight: 600;
+}
+
+.table-confidence.high {
+    background: var(--green-bg);
+    color: var(--green);
+}
+
+.table-confidence.medium {
+    background: var(--amber-bg);
+    color: var(--amber);
+}
+
+.table-confidence.low {
+    background: rgba(255, 255, 255, 0.05);
+    color: var(--text-muted);
+}
+
+.table-number {
+    font-family: 'Inter', monospace;
+    font-weight: 500;
+    font-size: 0.83rem;
+}
+
+.table-number.green { color: var(--green); }
+.table-number.red { color: var(--red); }
+
+.table-explanation {
+    font-size: 0.78rem;
+    color: var(--text-secondary);
+    max-width: 280px;
+    line-height: 1.4;
+}
+
+/* Loading row */
+.loading-row td {
+    padding: 40px;
+}
+
+.table-loader {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+    color: var(--text-muted);
+    font-size: 0.85rem;
+}
+
+.loader-spinner {
+    width: 32px;
+    height: 32px;
+    border: 3px solid var(--border-color);
+    border-top-color: var(--accent-purple);
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+
+/* ==================== COUNTDOWN ==================== */
+.countdown-bar {
+    margin-top: 20px;
+    margin-bottom: 20px;
+    padding: 10px 20px;
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius);
+}
+
+.countdown-inner {
+    font-size: 0.8rem;
+    color: var(--text-secondary);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    margin-bottom: 8px;
+}
+
+.countdown-icon {
+    font-size: 1rem;
+}
+
+.countdown-timer {
+    font-weight: 700;
+    color: var(--accent-cyan);
+    font-size: 0.9rem;
+    min-width: 20px;
+    text-align: center;
+}
+
+.countdown-progress {
+    height: 3px;
+    background: var(--border-color);
+    border-radius: 2px;
+    overflow: hidden;
+}
+
+.countdown-fill {
+    height: 100%;
+    background: var(--accent-gradient);
+    border-radius: 2px;
+    transition: width 1s linear;
+    width: 100%;
+}
+
+/* ==================== FOOTER ==================== */
+.footer {
+    margin-top: 40px;
+    padding: 24px 0;
+    border-top: 1px solid var(--border-color);
+    text-align: center;
+}
+
+.footer-brand {
+    font-weight: 700;
+    font-size: 0.85rem;
+    color: var(--text-secondary);
+    margin-bottom: 6px;
+}
+
+.footer-disclaimer {
+    font-size: 0.72rem;
+    color: var(--text-muted);
+    max-width: 500px;
+    margin: 0 auto;
+    line-height: 1.5;
+}
+
+/* ==================== ANIMATIONS ==================== */
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(12px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.animate-in {
+    animation: fadeInUp 0.4s ease forwards;
+}
+
+/* ==================== RESPONSIVE ==================== */
+@media (max-width: 600px) {
+    .header-inner {
+        flex-direction: column;
+        height: auto;
+        padding: 12px 0;
+        gap: 8px;
+    }
+    .status-container {
+        align-items: center;
+    }
+    .card-price {
+        font-size: 1.3rem;
+    }
+    .volatility-inner {
+        font-size: 0.78rem;
+    }
+}
