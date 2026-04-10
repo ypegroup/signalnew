@@ -1,13 +1,6 @@
-# Crypto Signals Pro
+# Crypto Signals Pro V2
 
-Web simple para generar señales de criptomonedas usando Binance API.
-
-## Funciones
-- Señales automáticas
-- TP / SL
-- Riesgo / beneficio
-- Actualización en tiempo real
-
-## Cómo usar
-1. Abrir index.html
-2. Listo 🚀
+Versión mejorada con análisis real:
+- EMA 50 / 200
+- RSI
+- Señales más estables
